@@ -165,9 +165,6 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 						'<' + attrs.taDefaultWrap.toUpperCase() + '>&nbsp;</' + attrs.taDefaultWrap.toUpperCase() + '>' :
 						'<' + attrs.taDefaultWrap + '>&nbsp;</' + attrs.taDefaultWrap + '>';
 			}
-			taOptions.taDefaultWrap = attrs.taDefaultWrap;
-			taOptions._defaultVal = _defaultVal;
-			taOptions._defaultTest = _defaultTest;
 
 			/* istanbul ignore else */
 			if(!ngModelOptions.$options) ngModelOptions.$options = {}; // ng-model-options support
@@ -968,7 +965,11 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 									//console.log('new:', _val);
 									_setViewValue(_val, true);
 								}
-								rangy.restoreSelection(_savedSelection);
+								// if the savedSelection marker is gone at this point, we cannot restore the selection!!!
+                                //console.log('rangy.restoreSelection', ngModel.$viewValue.length, _savedSelection);
+								if (ngModel.$viewValue.length !== 0) {
+                                    rangy.restoreSelection(_savedSelection);
+                                }
 							}, 1000);
 						}
 					});

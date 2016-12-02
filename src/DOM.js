@@ -190,10 +190,11 @@ angular.module('textAngular.DOM', ['textAngular.factories'])
 			// nothing left to do..
 			return element;
 		}
-		/* istanbul ignore if */
+		/* istanbul ignore next - not sure have to test this */
 		if (options === '<br>'){
 			return element;
-		} else {
+		}
+		else {
 			var $target = angular.element(options);
 			$target[0].innerHTML = element.innerHTML;
 			element.parentNode.insertBefore($target[0], element);
@@ -248,7 +249,6 @@ angular.module('textAngular.DOM', ['textAngular.factories'])
                         //console.log('inner whole container', selectedElement.childNodes);
                         _innerNode = '<div>' + __h + '</div>';
                         selectedElement.innerHTML = _innerNode;
-                        //console.log('childNodes:', selectedElement.childNodes);
                         taSelection.setSelectionToElementEnd(selectedElement.childNodes[0]);
                         selectedElement = taSelection.getSelectionElement();
                     } else if (selectedElement.tagName.toLowerCase() === 'span' &&
@@ -297,9 +297,7 @@ angular.module('textAngular.DOM', ['textAngular.factories'])
                             // Firefox adds <br>'s and so we remove the <br>
                             __h = __h.replace(/<br>/i, '&#8203;');  // no space-space
 							selectedElement.innerHTML = __h;
-							taSelection.setSelectionToElementEnd(selectedElement.childNodes[0]);
-							selectedElement = taSelection.getSelectionElement();
-                        }
+						}
                     } else if (selectedElement.tagName.toLowerCase() === 'li' &&
                         ourSelection && ourSelection.start &&
                         ourSelection.start.offset === ourSelection.end.offset) {
@@ -309,12 +307,11 @@ angular.module('textAngular.DOM', ['textAngular.factories'])
                             // Firefox adds <br>'s and so we remove the <br>
                             __h = __h.replace(/<br>/i, '');  // nothing
 							selectedElement.innerHTML = __h;
-							taSelection.setSelectionToElementEnd(selectedElement.childNodes[0]);
-							selectedElement = taSelection.getSelectionElement();
                         }
                     }
                 }
             }catch(e){}
+			//console.log('************** selectedElement:', selectedElement);
 			/* istanbul ignore if: */
 			if (!selectedElement){return;}
 			var $selected = angular.element(selectedElement);
@@ -447,17 +444,10 @@ angular.module('textAngular.DOM', ['textAngular.factories'])
 						$target.remove();
 						$target = next;
 					}else{
-						if (taDefaultWrap === 'br'){
-							var firstChild = angular.element($target[0].childNodes[0]);
-							$target.replaceWith($target[0].childNodes);
-							$target = firstChild;
-							return;
-						} else {
-							defaultWrapper.append($target[0].childNodes);
-							$target.after(defaultWrapper);
-							$target.remove();
-							$target = defaultWrapper;
-						}
+						defaultWrapper.append($target[0].childNodes);
+						$target.after(defaultWrapper);
+						$target.remove();
+						$target = defaultWrapper;
 					}
 				}else if($target.parent()[0].tagName.toLowerCase() === optionsTagName &&
 					!$target.parent().hasClass('ta-bind')){
@@ -506,7 +496,6 @@ angular.module('textAngular.DOM', ['textAngular.factories'])
 						$target = angular.element(options);
 						$target[0].innerHTML = _nodes[0].innerHTML;
 						_nodes[0].innerHTML = $target[0].outerHTML;
-						$target = angular.element(_nodes[0]);
 					}else if(optionsTagName === 'blockquote'){
 						// blockquotes wrap other block elements
 						html = '';
@@ -565,6 +554,7 @@ angular.module('textAngular.DOM', ['textAngular.factories'])
 					tagEnd = '</a>',
 					_selection = taSelection.getSelection();
 				if(_selection.collapsed){
+					//console.log('collapsed');
 					// insert text at selection, then select then just let normal exec-command run
 					taSelection.insertHtml(tagBegin + options + tagEnd, topNode);
 				}else if(rangy.getSelection().getRangeAt(0).canSurroundContents()){
@@ -573,6 +563,7 @@ angular.module('textAngular.DOM', ['textAngular.factories'])
 				}
 				return;
 			}else if(command.toLowerCase() === 'inserthtml'){
+				//console.log('inserthtml');
 				taSelection.insertHtml(options, topNode);
 				return;
 			}
